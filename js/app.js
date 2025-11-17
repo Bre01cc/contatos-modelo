@@ -7,6 +7,7 @@ export const lerContatos = async () => {
     return data
 }
 
+
  export const criarContato = async (contato) => {
     const url = "https://bakcend-fecaf-render.onrender.com/contatos"
     const options = {

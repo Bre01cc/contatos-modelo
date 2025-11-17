@@ -32,10 +32,52 @@ const CriarContatos = (contato) => {
         p.textContent = contato.celular
 
     }
+    const pID = document.createElement('p')
+    pID.classList.add('id')
+    pID.textContent = contato.id
 
-    card.append(img, h2, p)
+    card.append(img, h2, p, pID)
+    card.addEventListener('click', async () => {
+        pID.textContent
+        const contatos = await lerContatos()
+        contatos.forEach(contato => {
+            if (contato.id == pID.textContent) {
+                main.classList.remove('card-show')
+                main.classList.add('form-show')
+
+               const nome    = document.getElementById('nome')
+               nome.readOnly = true
+               const celular = document.getElementById('celular')
+               celular.readOnly = true
+               const foto    =  document.getElementById('foto')
+               foto.readOnly = true
+               const email   = document.getElementById('email')
+               email.readOnly = true
+               const endereco =  document.getElementById('endereco')
+               endereco.readOnly = true
+               const cidade = document.getElementById('cidade')
+               cidade.readOnly = true 
+
+              
+                 nome.value =  contato.nome
+                 celular.value = contato.celular 
+                 foto.value  
+                 email.value = contato.email 
+                 endereco.value = contato.endereco 
+                 cidade.value = contato.cidade 
+               
+
+            }
+        })
+
+    })
     container.appendChild(card)
 
+}
+
+
+const editarPerfil = ()=>{
+    
 }
 
 const carregar = async () => {
@@ -49,7 +91,7 @@ const cadastrar = async () => {
         || document.getElementById('nome').value == "" || document.getElementById('email').value == null
         || document.getElementById('email').value == undefined || document.getElementById('email').value == "") {
 
-        alert('camos a serem preenchidos')
+        return false
 
     } else {
         let contato = {
@@ -59,16 +101,17 @@ const cadastrar = async () => {
             "email": `${document.getElementById('email').value}`,
             "endereco": `${document.getElementById('endereco').value}`,
             "cidade": `${document.getElementById('cidade').value}`
-        }
-        // const cadastro = await criarContato(contato)
 
-        console.log(document.getElementById('foto').value)
+        }
+        await criarContato(contato)
+        return true
     }
 
 
 }
 
 const main = document.querySelector('main')
+
 document.getElementById('novo-contato').addEventListener('click', () => {
     main.classList.remove('card-show')
     main.classList.add('form-show')
@@ -78,14 +121,19 @@ document.getElementById('cancelar').addEventListener('click', () => {
     main.classList.remove('form-show')
     main.classList.add('card-show')
 
-
-    console.log('caiuu')
 })
 
 
 document.getElementById('salvar').addEventListener('click', () => {
-    cadastrar()
+    const cadastro = cadastrar()
+    if (cadastro) {
+        alert('Contado cadastrado com sucesso')
+    }
+    else {
+        alert('Não foi possível realizar o cadastro do contato')
+    }
 })
-console.log(await lerContatos())
+
+
 
 carregar()

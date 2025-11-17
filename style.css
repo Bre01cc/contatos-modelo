@@ -136,3 +136,6 @@ main.form-show form {
     display: flex;
     justify-content: space-evenly;
 }
+.id{
+    color: white;
+}
