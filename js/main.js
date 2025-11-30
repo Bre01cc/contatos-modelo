@@ -159,6 +159,8 @@ const contatoSalvar = async (botao, contato) => {
             console.log(cadastro)
             if (cadastro) {
                 alert('Contato cadastrado com sucesso')
+                main.classList.remove('form-show')
+                main.classList.add('card-show')
             }
             else {
                 alert('Não foi possível realizar o cadastro do contato')
