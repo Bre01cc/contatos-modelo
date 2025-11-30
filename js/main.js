@@ -2,6 +2,8 @@
 
 import { lerContatos } from "./app.js"
 import { criarContato } from "./app.js"
+import { deletarContato } from "./app.js"
+import { atualizarContato } from "./app.js"
 
 
 const CriarContatos = (contato) => {
@@ -45,29 +47,107 @@ const CriarContatos = (contato) => {
                 main.classList.remove('card-show')
                 main.classList.add('form-show')
 
-               const nome    = document.getElementById('nome')
-               nome.readOnly = true
-               const celular = document.getElementById('celular')
-               celular.readOnly = true
-               const foto    =  document.getElementById('foto')
-               foto.readOnly = true
-               const email   = document.getElementById('email')
-               email.readOnly = true
-               const endereco =  document.getElementById('endereco')
-               endereco.readOnly = true
-               const cidade = document.getElementById('cidade')
-               cidade.readOnly = true 
+                const nome = document.getElementById('nome')
+                nome.readOnly = true
+                const celular = document.getElementById('celular')
+                celular.readOnly = true
+                const foto = document.getElementById('foto')
+                foto.readOnly = true
+                const email = document.getElementById('email')
+                email.readOnly = true
+                const endereco = document.getElementById('endereco')
+                endereco.readOnly = true
+                const cidade = document.getElementById('cidade')
+                cidade.readOnly = true
+                const imgContato = document.getElementById('preview-image')
+                imgContato.readOnly = true
 
-              
-                 nome.value =  contato.nome
-                 celular.value = contato.celular 
-                 foto.value  
-                 email.value = contato.email 
-                 endereco.value = contato.endereco 
-                 cidade.value = contato.cidade 
-               
+                imgContato.src = contato.foto
+                nome.value = contato.nome
+                celular.value = contato.celular
+                foto.value
+                email.value = contato.email
+                endereco.value = contato.endereco
+                cidade.value = contato.cidade
+
+                document.getElementById('editar').addEventListener('click', () => {
+
+                    nome.readOnly = false
+
+                    celular.readOnly = false
+
+                    foto.readOnly = false
+
+                    email.readOnly = false
+
+                    endereco.readOnly = false
+
+                    cidade.readOnly = false
+
+                    imgContato.readOnly = false
+
+                    document.getElementById('salvar').addEventListener('click', async () => {
+                        
+                            
+                            const contatoCadastro = {
+                            "nome": `${document.getElementById('nome').value}`,
+                            "celular": `${document.getElementById('celular').value}`,
+                            "foto": `document.getElementById('foto').files[0];`,
+                            "email": `${document.getElementById('email').value}`,
+                            "endereco": `${document.getElementById('endereco').value}`,
+                            "cidade": `${document.getElementById('cidade').value}`
+
+                        }
+
+
+
+                        
+                        if (contato.id == undefined) {
+                            if (document.getElementById('nome').value == null || document.getElementById('nome').value == undefined
+                                || document.getElementById('nome').value == "" || document.getElementById('email').value == null
+                                || document.getElementById('email').value == undefined || document.getElementById('email').value == "") {
+
+                                return false
+
+                            } else {
+
+                                const cadastro = await criarContato(contatoCadastro)
+                                if (cadastro) {
+                                    alert('Contato cadastrado com sucesso')
+                                }
+                                else {
+                                    alert('Não foi possível realizar o cadastro do contato')
+                                }
+                            }
+                        } else {
+                            const atualizar = await atualizarContato(contato.id, contatoCadastro)
+                            if (atualizar) {
+                                alert('Contato atualizado com sucesso')
+                            }
+                            else {
+                                alert('Não foi possível atualizar o contato')
+                            }
+
+                        }
+
+
+
+                    })
+                })
+
 
             }
+            document.getElementById('deletar').addEventListener('click', async () => {
+                const deletar = await deletarContato(contato.id)
+                if (deletar) {
+                    alert('Deletado com sucesso!!!')
+                } else {
+                    alert('Não foi possível deletar o contato!!!')
+                }
+            })
+
+
+
         })
 
     })
@@ -76,9 +156,7 @@ const CriarContatos = (contato) => {
 }
 
 
-const editarPerfil = ()=>{
-    
-}
+
 
 const carregar = async () => {
     const contatos = await lerContatos()
@@ -86,29 +164,6 @@ const carregar = async () => {
 
 }
 
-const cadastrar = async () => {
-    if (document.getElementById('nome').value == null || document.getElementById('nome').value == undefined
-        || document.getElementById('nome').value == "" || document.getElementById('email').value == null
-        || document.getElementById('email').value == undefined || document.getElementById('email').value == "") {
-
-        return false
-
-    } else {
-        let contato = {
-            "nome": `${document.getElementById('nome').value}`,
-            "celular": `${document.getElementById('celular').value}`,
-            "foto": `${document.getElementById('foto').value}`,
-            "email": `${document.getElementById('email').value}`,
-            "endereco": `${document.getElementById('endereco').value}`,
-            "cidade": `${document.getElementById('cidade').value}`
-
-        }
-        await criarContato(contato)
-        return true
-    }
-
-
-}
 
 const main = document.querySelector('main')
 
@@ -125,14 +180,22 @@ document.getElementById('cancelar').addEventListener('click', () => {
 
 
 document.getElementById('salvar').addEventListener('click', () => {
-    const cadastro = cadastrar()
-    if (cadastro) {
-        alert('Contado cadastrado com sucesso')
-    }
-    else {
-        alert('Não foi possível realizar o cadastro do contato')
-    }
+
+
 })
+
+document.getElementById('img-logo').addEventListener('click', () => {
+    main.classList.remove('form-show')
+    main.classList.add('card-show')
+
+})
+
+const preview = ({ target }) => {
+
+    document.getElementById('preview-image').src = URL.createObjectURL(target.files[0])
+}
+
+document.getElementById('foto').addEventListener('change', preview)
 
 
 
