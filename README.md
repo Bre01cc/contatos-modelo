@@ -19,7 +19,7 @@ Cada contato pode conter nome, telefone e foto, com comunicação por requisiç�
 - Contato :
 <img width="1913" height="912" alt="image" src="https://github.com/user-attachments/assets/6f3b4333-ff63-4efe-afa9-aad30614edc8" />
 
- # Tecnologias
+ ## Tecnologias
 - CSS
 - HTML
 - JS
