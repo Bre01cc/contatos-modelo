@@ -9,9 +9,12 @@ let mudarEfeitoSalvar = true
 let idContato = ""
 console.log(lerContatos())
 
+document.getElementById('deletar').disabled = true;
+document.getElementById('editar').disabled = true;
+const container = document.getElementById('container')
+container.classList.add('container')
+
 const CriarContatos = (contato) => {
-    const container = document.getElementById('container')
-    container.classList.add('container')
     const card = document.createElement('div')
     card.classList.add('card-contato')
     console.log(contato.foto)
@@ -42,11 +45,17 @@ const CriarContatos = (contato) => {
     pID.textContent = contato.id
 
     card.append(img, h2, p, pID)
-    card.addEventListener('click', async () => {
+    card.onclick = async () => {
         pID.textContent
         const contatos = await lerContatos()
         contatos.forEach(contato => {
             if (contato.id == pID.textContent) {
+
+                document.getElementById('salvar').disabled = true;
+                document.getElementById('deletar').disabled = false;
+                document.getElementById('editar').disabled = false;
+
+                idContato = contato.id
                 main.classList.remove('card-show')
                 main.classList.add('form-show')
 
@@ -89,27 +98,20 @@ const CriarContatos = (contato) => {
 
                     imgContato.readOnly = false
 
+                    document.getElementById('salvar').disabled = false;
                     mudarEfeitoSalvar = false
-                    idContato = contato.id
+
 
                 })
 
 
             }
-            document.getElementById('deletar').addEventListener('click', async () => {
-                const deletar = await deletarContato(contato.id)
-                if (deletar) {
-                    alert('Deletado com sucesso!!!')
-                } else {
-                    alert('Não foi possível deletar o contato!!!')
-                }
-            })
 
 
 
         })
 
-    })
+    }
     container.appendChild(card)
 
 }
@@ -161,6 +163,8 @@ const contatoSalvar = async (botao, contato) => {
                 alert('Contato cadastrado com sucesso')
                 main.classList.remove('form-show')
                 main.classList.add('card-show')
+                container.innerHTML = ""
+                carregar()
             }
             else {
                 alert('Não foi possível realizar o cadastro do contato')
@@ -184,7 +188,18 @@ const contatoSalvar = async (botao, contato) => {
 
 }
 
-
+document.getElementById('deletar').onclick = async () => {
+    const deletar = await deletarContato(idContato)
+    if (deletar) {
+        alert('Deletado com sucesso!!!')
+        main.classList.remove('form-show')
+        main.classList.add('card-show')
+        container.innerHTML = ""
+        carregar()
+    } else {
+        alert('Não foi possível deletar o contato!!!')
+    }
+}
 const main = document.querySelector('main')
 
 document.getElementById('novo-contato').addEventListener('click', () => {
@@ -197,18 +212,11 @@ document.getElementById('cancelar').addEventListener('click', () => {
     main.classList.add('card-show')
 
 })
-
-
-document.getElementById('salvar').addEventListener('click', () => {
-
-
-})
-
-document.getElementById('img-logo').addEventListener('click', () => {
+document.getElementById('img-logo').onclick = () => {
     main.classList.remove('form-show')
     main.classList.add('card-show')
 
-})
+}
 
 const preview = ({ target }) => {
 
